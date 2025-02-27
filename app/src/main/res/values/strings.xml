@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Number Composition</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="game_rules">
+        Перед вами будет пример: сумма двух чисел. Одно из этих чисел неизвестно. Необходимо на
+        место пропуска выбрать число из предложенных ниже так, чтобы при сложении выполнялось
+        равенство.\n\nПример: 1 + … = 5.\nВарианты ответа: 10, 3, 5, 4, 6, 0.\nПравильный ответ - 4,
+        так как 1 + 4 = 5.\n\nТак же в течение уровня будут считаться количество правильных ответов
+        и их процент от всех ответов. Чтобы пройти уровен, необходимо уложиться в установленные
+        значения.
+    </string>
+    <string name="game_rules_title">Правила игры</string>
+    <string name="game_name">Состав числа</string>
+    <string name="start_game">Начать</string>
 </resources>
