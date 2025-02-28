@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentGreetingBinding
+import com.example.numbercomposition.presentation.chooselevel.ChooseLevelFragment
 
 class GreetingFragment : Fragment() {
 
@@ -26,7 +27,7 @@ class GreetingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.startGameButton.setOnClickListener {
-
+            launchChooseLevelFragment()
         }
     }
 
@@ -35,9 +36,15 @@ class GreetingFragment : Fragment() {
         _binding = null
     }
 
+    private fun launchChooseLevelFragment() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container, ChooseLevelFragment.newInstance())
+            .commit()
+    }
+
     companion object {
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) = GreetingFragment()
+        fun newInstance() = GreetingFragment()
     }
 }
