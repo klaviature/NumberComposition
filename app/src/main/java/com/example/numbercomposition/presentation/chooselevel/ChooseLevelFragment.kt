@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentChooseLevelBinding
+import com.example.numbercomposition.domain.entities.Level
+import com.example.numbercomposition.presentation.game.GameFragment
 
 class ChooseLevelFragment : Fragment() {
 
@@ -28,6 +30,28 @@ class ChooseLevelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+            testLevelCardView.setOnClickListener {
+                launchGameFragment(Level.TEST)
+            }
+            easyLevelCardView.setOnClickListener {
+                launchGameFragment(Level.EASY)
+            }
+            normalLevelCardView.setOnClickListener {
+                launchGameFragment(Level.NORMAL)
+            }
+            hardLevelCardView.setOnClickListener {
+                launchGameFragment(Level.HARD)
+            }
+        }
+    }
+
+    private fun launchGameFragment(level: Level) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.main_fragment_container, GameFragment.newInstance(level))
+            .commit()
     }
 
     companion object {
