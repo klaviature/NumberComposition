@@ -8,7 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentGameBinding
+import com.example.numbercomposition.domain.entities.GameResult
+import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.entities.Level
+import com.example.numbercomposition.presentation.gamefinish.GameFinishFragment
+import kotlin.math.min
 
 class GameFragment : Fragment() {
 
@@ -34,6 +38,33 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.testTv.text = "Level: ${level.name}"
+
+        binding.root.setOnClickListener {
+            launchGameFinishFragment(GameResult(
+                isWon = true,
+                rightAnswersCount = 10,
+                answeredQuestionsCount = 10,
+                gameSettings = GameSettings(
+                    maxSumValue = 10,
+                    minRightAnswersCount = 5,
+                    minRightAnswersPercentage = 50,
+                    gameTimeSeconds = 5
+                )
+            ))
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun launchGameFinishFragment(gameResult: GameResult) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container, GameFinishFragment.newInstance(gameResult))
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun parseArgs() {
