@@ -34,13 +34,17 @@ class GameFinishFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tryAgainButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            retryGame()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun retryGame() {
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 
     private fun parseArgs() {
