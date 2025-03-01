@@ -8,5 +8,6 @@ data class GameResult(
     val isWon: Boolean,
     val rightAnswersCount: Int,
     val answeredQuestionsCount: Int,
+    val grade: GameResultGrade,
     val gameSettings: GameSettings
 ) : Parcelable

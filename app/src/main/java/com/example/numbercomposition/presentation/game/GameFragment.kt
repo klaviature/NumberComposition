@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentGameBinding
 import com.example.numbercomposition.domain.entities.GameResult
+import com.example.numbercomposition.domain.entities.GameResultGrade
 import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.entities.Level
 import com.example.numbercomposition.presentation.gamefinish.GameFinishFragment
@@ -40,16 +41,18 @@ class GameFragment : Fragment() {
         binding.testTv.text = "Level: ${level.name}"
 
         binding.root.setOnClickListener {
+            val gameSettings = GameSettings(
+                maxSumValue = 10,
+                minRightAnswersCount = 5,
+                minRightAnswersRatio = 0.5,
+                gameTimeSeconds = 5
+            )
             launchGameFinishFragment(GameResult(
                 isWon = true,
                 rightAnswersCount = 10,
                 answeredQuestionsCount = 10,
-                gameSettings = GameSettings(
-                    maxSumValue = 10,
-                    minRightAnswersCount = 5,
-                    minRightAnswersPercentage = 50,
-                    gameTimeSeconds = 5
-                )
+                grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 10),
+                gameSettings = gameSettings
             ))
         }
     }

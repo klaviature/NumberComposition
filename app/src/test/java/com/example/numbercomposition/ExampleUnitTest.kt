@@ -1,6 +1,8 @@
 package com.example.numbercomposition
 
 import com.example.numbercomposition.data.GameRepositoryImpl
+import com.example.numbercomposition.domain.entities.GameResultGrade
+import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.usecases.GenerateQuestionUseCase
 import org.junit.Test
 
@@ -12,17 +14,32 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun lost_grade() {
+        val gameSettings = GameSettings(100, 10, 0.2, 10)
+        val grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 1)
+        assertEquals(GameResultGrade.LOST, grade)
     }
 
     @Test
-    fun someTest() {
-        val gameRepository = GameRepositoryImpl()
+    fun could_be_better_grade() {
+        val gameSettings = GameSettings(100, 10, 0.2, 10)
+        val grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 3)
+        assertEquals(GameResultGrade.COULD_BE_BETTER, grade)
+    }
 
-        val maxSumValue = 20
-        val question = GenerateQuestionUseCase(gameRepository).invoke(maxSumValue)
-        println(question)
+    @Test
+    fun good_grade() {
+        val gameSettings = GameSettings(100, 10, 0.2, 10)
+        val grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 6)
+        assertEquals(GameResultGrade.GOOD, grade)
+    }
+
+    @Test
+    fun perfect_grade() {
+        val gameSettings = GameSettings(100, 10, 0.2, 10)
+        val grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 10)
+        assertEquals(GameResultGrade.PERFECT, grade)
     }
 }

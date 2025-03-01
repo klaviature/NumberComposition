@@ -5,7 +5,11 @@
     <color name="light_green_1">#B1F0A6</color>
     <color name="light_green_2">#EDFBE6</color>
     <color name="light_green_3">#73AB69</color>
-    <color name="light_blue_1">#C7E8FF</color>
+    <color name="light_blue_1">#D7ECFF</color>
+    <color name="light_blue_2">#B8E6FF</color>
     <color name="light_orange_1">#FFF4C7</color>
     <color name="light_red_1">#FFC7C7</color>
+    <color name="light_red_2">#FFE8E8</color>
+    <color name="light_orange_2">#FFEBC7</color>
+    <color name="light_orange_3">#FFF9E8</color>
 </resources>

@@ -38,28 +38,28 @@ class GameRepositoryImpl : GameRepository {
             Level.TEST -> GameSettings(
                 maxSumValue = 20,
                 minRightAnswersCount = 4,
-                minRightAnswersPercentage = 50,
+                minRightAnswersRatio = 0.5,
                 gameTimeSeconds = 8
             )
 
             Level.EASY -> GameSettings(
                 maxSumValue = 10,
                 minRightAnswersCount = 5,
-                minRightAnswersPercentage = 50,
+                minRightAnswersRatio = 0.5,
                 gameTimeSeconds = 60
             )
 
             Level.NORMAL -> GameSettings(
                 maxSumValue = 40,
                 minRightAnswersCount = 6,
-                minRightAnswersPercentage = 70,
+                minRightAnswersRatio = 0.7,
                 gameTimeSeconds = 40
             )
 
             Level.HARD -> GameSettings(
                 maxSumValue = 100,
                 minRightAnswersCount = 10,
-                minRightAnswersPercentage = 90,
+                minRightAnswersRatio = 0.9,
                 gameTimeSeconds = 30
             )
         }
