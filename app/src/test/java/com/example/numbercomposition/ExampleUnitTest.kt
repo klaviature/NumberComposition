@@ -42,4 +42,18 @@ class ExampleUnitTest {
         val grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 10)
         assertEquals(GameResultGrade.PERFECT, grade)
     }
+
+    @Test
+    fun some() {
+        assertThrows(IllegalArgumentException::class.java) {
+            GameSettings(100, 10, 1.2, 10)
+        }
+    }
+
+    @Test
+    fun some2() {
+        assertThrows(IllegalArgumentException::class.java) {
+            GameSettings(100, 10, -0.2, 10)
+        }
+    }
 }

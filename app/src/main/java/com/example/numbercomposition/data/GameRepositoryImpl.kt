@@ -1,9 +1,12 @@
 package com.example.numbercomposition.data
 
+import android.util.Log
 import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.entities.Level
 import com.example.numbercomposition.domain.entities.Question
 import com.example.numbercomposition.domain.repository.GameRepository
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class GameRepositoryImpl : GameRepository {
@@ -21,13 +24,16 @@ class GameRepositoryImpl : GameRepository {
 //        }
 
         val sum = Random.nextInt(MIN_SUM_VALUE, maxSumValue + 1)
+        Log.d("Repos", sum.toString())
         val visibleNumber = Random.nextInt(sum + 1)
         val options = HashSet<Int>()
         val rightAnswer = sum - visibleNumber
 
         options.add(rightAnswer)
+        val from = max(rightAnswer - optionsCount, MIN_OPTIONS_VALUE)
+        val to = min(maxSumValue, rightAnswer + optionsCount)
         while (options.size < optionsCount) {
-            options.add(Random.nextInt(MIN_OPTIONS_VALUE, sum + 1))
+            options.add(Random.nextInt(from, to))
         }
 
         return Question(sum, visibleNumber, options.toList())

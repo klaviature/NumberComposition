@@ -1,11 +1,14 @@
 package com.example.numbercomposition.presentation.game
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentGameBinding
 import com.example.numbercomposition.domain.entities.GameResult
@@ -13,15 +16,16 @@ import com.example.numbercomposition.domain.entities.GameResultGrade
 import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.entities.Level
 import com.example.numbercomposition.presentation.gamefinish.GameFinishFragment
-import kotlin.math.min
 
 class GameFragment : Fragment() {
 
     private lateinit var level: Level
 
     private var _binding: FragmentGameBinding? = null
+
+    private lateinit var viewModel: GameViewModel
     private val binding: FragmentGameBinding
-        get () = _binding ?: throw IllegalStateException("Binding is null")
+        get() = _binding ?: throw IllegalStateException("Binding is null")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,28 +42,103 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.testTv.text = "Level: ${level.name}"
+        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        viewModel.startGame(level)
 
-        binding.root.setOnClickListener {
-            val gameSettings = GameSettings(
-                maxSumValue = 10,
-                minRightAnswersCount = 5,
-                minRightAnswersRatio = 0.5,
-                gameTimeSeconds = 5
-            )
-            launchGameFinishFragment(GameResult(
-                isWon = true,
-                rightAnswersCount = 10,
-                answeredQuestionsCount = 10,
-                grade = GameResultGrade.getGrade(gameSettings.minRightAnswersRatio, 10, 10),
-                gameSettings = gameSettings
-            ))
-        }
+        observeViewModel()
+
+        setOptionClickListeners()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("GameFragment", "onDestroyed")
+    }
+
+    private fun observeViewModel() {
+        with(binding) {
+            viewModel.sum.observe(viewLifecycleOwner) { sum ->
+                sumTextView.text = sum.toString()
+            }
+            viewModel.visibleNumber.observe(viewLifecycleOwner) { visibleNumber ->
+                visibleNumberTextView.text = visibleNumber.toString()
+            }
+            viewModel.options.observe(viewLifecycleOwner) { options ->
+                firstOptionTextView.text = options[0].toString()
+                secondOptionTextView.text = options[1].toString()
+                thirdOptionTextView.text = options[2].toString()
+                fourthOptionTextView.text = options[3].toString()
+                fifthOptionTextView.text = options[4].toString()
+                sixthOptionTextView.text = options[5].toString()
+            }
+            viewModel.optionColors.observe(viewLifecycleOwner) { colors ->
+                firstOptionCardView.backgroundTintList = getColorStateList(R.color.light_red_1)
+                secondOptionCardView.backgroundTintList = getColorStateList(colors[1].color)
+                thirdOptionCardView.backgroundTintList = getColorStateList(colors[2].color)
+                fourthOptionCardView.backgroundTintList = getColorStateList(colors[3].color)
+                fifthOptionCardView.backgroundTintList = getColorStateList(colors[4].color)
+                sixthOptionCardView.backgroundTintList = getColorStateList(colors[5].color)
+            }
+            viewModel.timeRemainingFormatted.observe(viewLifecycleOwner) { time ->
+                timerTextView.text = time
+            }
+            viewModel.timeRemainingProgress.observe(viewLifecycleOwner) { progress ->
+                timerProgressBar.progress = progress
+            }
+            viewModel.answersProgress.observe(viewLifecycleOwner) { progress ->
+                answersPercentageProgressBar.progress = progress
+            }
+        }
+        viewModel.isGameFinished.observe(viewLifecycleOwner) {
+            launchGameFinishFragment(
+                GameResult(
+                    true,
+                    0,
+                    0,
+                    GameResultGrade.LOST,
+                    GameSettings(0, 0, 0.0, 0)
+                )
+            )
+        }
+
+        viewModel.answersCount.observe(viewLifecycleOwner) { count ->
+            Log.d("GameFragment", "Answers count: $count")
+        }
+        viewModel.rightAnswersCount.observe(viewLifecycleOwner) { count ->
+            Log.d("GameFragment", "Right answers count: $count")
+        }
+    }
+
+    private fun getColorStateList(color: Int): ColorStateList {
+        return ColorStateList.valueOf(color)
+    }
+
+    private fun setOptionClickListeners() {
+        with(binding) {
+            firstOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(fifthOptionTextView.text.toString())
+            }
+            secondOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(secondOptionTextView.text.toString())
+            }
+            thirdOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(thirdOptionTextView.text.toString())
+            }
+            fourthOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(fourthOptionTextView.text.toString())
+            }
+            fifthOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(fifthOptionTextView.text.toString())
+            }
+            sixthOptionTextView.setOnClickListener {
+                viewModel.giveAnswer(sixthOptionTextView.text.toString())
+            }
+        }
     }
 
     private fun launchGameFinishFragment(gameResult: GameResult) {

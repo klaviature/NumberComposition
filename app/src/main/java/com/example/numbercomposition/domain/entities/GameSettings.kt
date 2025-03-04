@@ -9,4 +9,10 @@ data class GameSettings(
     val minRightAnswersCount: Int,
     val minRightAnswersRatio: Double,
     val gameTimeSeconds: Int
-) : Parcelable
+) : Parcelable {
+    init {
+        if (minRightAnswersRatio < 0 || minRightAnswersRatio > 1) {
+            throw IllegalArgumentException("minRightAnswersRatio should be between 0 and 1")
+        }
+    }
+}
