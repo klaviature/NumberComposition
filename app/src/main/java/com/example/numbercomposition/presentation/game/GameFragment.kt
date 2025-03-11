@@ -1,5 +1,7 @@
 package com.example.numbercomposition.presentation.game
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.numbercomposition.R
 import com.example.numbercomposition.databinding.FragmentGameBinding
@@ -15,6 +18,7 @@ import com.example.numbercomposition.domain.entities.GameResult
 import com.example.numbercomposition.domain.entities.GameResultGrade
 import com.example.numbercomposition.domain.entities.GameSettings
 import com.example.numbercomposition.domain.entities.Level
+import com.example.numbercomposition.domain.entities.OptionColor
 import com.example.numbercomposition.presentation.gamefinish.GameFinishFragment
 
 class GameFragment : Fragment() {
@@ -55,11 +59,6 @@ class GameFragment : Fragment() {
         _binding = null
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("GameFragment", "onDestroyed")
-    }
-
     private fun observeViewModel() {
         with(binding) {
             viewModel.sum.observe(viewLifecycleOwner) { sum ->
@@ -77,12 +76,7 @@ class GameFragment : Fragment() {
                 sixthOptionTextView.text = options[5].toString()
             }
             viewModel.optionColors.observe(viewLifecycleOwner) { colors ->
-                firstOptionCardView.backgroundTintList = getColorStateList(R.color.light_red_1)
-                secondOptionCardView.backgroundTintList = getColorStateList(colors[1].color)
-                thirdOptionCardView.backgroundTintList = getColorStateList(colors[2].color)
-                fourthOptionCardView.backgroundTintList = getColorStateList(colors[3].color)
-                fifthOptionCardView.backgroundTintList = getColorStateList(colors[4].color)
-                sixthOptionCardView.backgroundTintList = getColorStateList(colors[5].color)
+                setOptionsColors(colors)
             }
             viewModel.timeRemainingFormatted.observe(viewLifecycleOwner) { time ->
                 timerTextView.text = time
@@ -92,6 +86,9 @@ class GameFragment : Fragment() {
             }
             viewModel.answersProgress.observe(viewLifecycleOwner) { progress ->
                 answersPercentageProgressBar.progress = progress
+            }
+            viewModel.minRightAnswersProgress.observe(viewLifecycleOwner) { progress ->
+                answersPercentageProgressBar.secondaryProgress = progress
             }
         }
         viewModel.isGameFinished.observe(viewLifecycleOwner) {
@@ -114,14 +111,23 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun getColorStateList(color: Int): ColorStateList {
-        return ColorStateList.valueOf(color)
+    private fun setOptionsColors(colors: List<OptionColor>) {
+        binding.firstOptionCardView.setCardBackgroundColor(getColor(colors[0]))
+        binding.secondOptionCardView.setCardBackgroundColor(getColor(colors[1]))
+        binding.thirdOptionCardView.setCardBackgroundColor(getColor(colors[2]))
+        binding.fourthOptionCardView.setCardBackgroundColor(getColor(colors[3]))
+        binding.fifthOptionCardView.setCardBackgroundColor(getColor(colors[4]))
+        binding.sixthOptionCardView.setCardBackgroundColor(getColor(colors[5]))
+    }
+
+    private fun getColor(optionColor: OptionColor): Int {
+        return ContextCompat.getColor(requireContext(), optionColor.color)
     }
 
     private fun setOptionClickListeners() {
         with(binding) {
             firstOptionTextView.setOnClickListener {
-                viewModel.giveAnswer(fifthOptionTextView.text.toString())
+                viewModel.giveAnswer(firstOptionTextView.text.toString())
             }
             secondOptionTextView.setOnClickListener {
                 viewModel.giveAnswer(secondOptionTextView.text.toString())
